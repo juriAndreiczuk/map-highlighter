@@ -1,7 +1,7 @@
-import MapCanvasRect from './mapCanvas/MapCanvasRect'
+import СanvasRect from './mapCanvas/СanvasRect'
 
 setTimeout(() => {
-  const levelsImage = new MapCanvasRect({
+  const levelsImage = new СanvasRect({
     canvasWrap: '#wrap-canvas',
     canvasId: 'map-canvas',
     mapId: 'image-map',

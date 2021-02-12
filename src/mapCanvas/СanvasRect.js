@@ -1,6 +1,6 @@
-import MapCanvas from './MapCanvas'
+import Canvas from './Сanvas'
 
-class MapCanvasRect extends MapCanvas {
+class CanvasRect extends Canvas {
   constructor(props) {
     super(props);
     this.getInfo()
@@ -10,7 +10,7 @@ class MapCanvasRect extends MapCanvas {
   }
 
   getInfo() {
-    for(const area of this.areas) {
+    for(const area of this.canvasMap.areas) {
       const co =  area.coords.split(',');
       this.info.coords.push({
         x: co[0], y: co[1], w: co[2] - co[0], h: co[3] - co[1]
@@ -28,7 +28,7 @@ class MapCanvasRect extends MapCanvas {
       const coords = this.info.coords[i];
       this.ctx.beginPath(this.ctx.isPointInPath(x, y));
       this.ctx.rect(coords.x, coords.y, coords.w, coords.h);
-      this.ctx.fillStyle = this.ctx.isPointInPath(x, y) ?  'transparent' : this.hoverColor;
+      this.ctx.fillStyle = this.ctx.isPointInPath(x, y) ?  'transparent' : this.canvasMap.hoverColor;
       this.ctx.fill();
       if(this.ctx.isPointInPath(x, y)) {
         this.canvas.onclick = () => {
@@ -39,4 +39,4 @@ class MapCanvasRect extends MapCanvas {
   }
 }
 
-export default MapCanvasRect
+export default CanvasRect

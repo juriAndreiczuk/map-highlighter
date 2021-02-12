@@ -1,6 +1,6 @@
-import MapCanvas from './MapCanvas'
+import Canvas from './Сanvas'
 
-class MapCanvasShape extends MapCanvas {
+class CanvasPoly extends Canvas {
   constructor(props) {
     super(props)
     this.getInfo() 
@@ -40,4 +40,4 @@ class MapCanvasShape extends MapCanvas {
   }
 }
 
-export default MapCanvasShape
+export default CanvasPoly
