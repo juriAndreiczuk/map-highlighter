@@ -12,7 +12,6 @@ class CanvasPoly extends Canvas {
   getInfo() {
     for(const area of this.areas) {
       this.info.coords.push(area.coords.split(','))
-      this.info.hrefs.push(area.href);
     }
   }
 

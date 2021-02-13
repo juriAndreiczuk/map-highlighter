@@ -9,15 +9,19 @@ class Map {
   }
 
   get coords () {
-    return Array.prototype.map.call(this.areas, item => 
-      item.coords.split(','))
+    return Array.prototype.map.call(this.areas, item => item.coords.split(','))
   }
+
   set coords (val) {
     for(const area of this.areas) {
-      area.coords = area.coords.split(',').map(item => 
-        item *= val).join(',')
+      area.coords = area.coords.split(',').map(item => item *= val).join(',')
     }
   }
+
+  get hrefs () {
+    return Array.prototype.map.call(this.areas, item => item.href)
+  }
+
   resize () {
     this.coords = this.currentWidth
     this.previousWidth = document.body.clientWidth
