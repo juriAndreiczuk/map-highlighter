@@ -1,8 +1,8 @@
-import СanvasRect from './mapCanvas/СanvasRect'
+import MapCanvas from './mapCanvas/MapCanvas'
 
-const levelsImage = new СanvasRect({
-  canvasWrap: '#wrap-canvas',
+const levelsImage = new MapCanvas({
+  wrap: '#wrap-canvas',
   canvasId: 'map-canvas',
   mapId: 'image-map',
-  hoverColor: '#000'
-});
+  hoverColor: 'rgba(0,0,0, .5)'
+})

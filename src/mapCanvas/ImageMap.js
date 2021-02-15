@@ -1,6 +1,5 @@
-class Map {
-  constructor(hoverColor, mapId) {
-    this.hoverColor = hoverColor
+export default class ImageMap {
+  constructor(mapId) {
     this.areas = document.querySelectorAll(`#${mapId} area`)
     this.previousWidth = 1920
     this.currentWidth = document.body.clientWidth / this.previousWidth
@@ -8,8 +7,18 @@ class Map {
     window.addEventListener('resize', () =>  this.resize)
   }
 
+  get hrefs () {
+    return Array.prototype.map.call(this.areas, item => item.href)
+  }
+
   get coords () {
     return Array.prototype.map.call(this.areas, item => item.coords.split(','))
+  }
+
+  get coordsSquare () {
+    return this.coords.map(co => ({
+      x: co[0], y: co[1], w: co[2] - co[0], h: co[3] - co[1]
+    }))
   }
 
   set coords (val) {
@@ -18,14 +27,8 @@ class Map {
     }
   }
 
-  get hrefs () {
-    return Array.prototype.map.call(this.areas, item => item.href)
-  }
-
   resize () {
     this.coords = this.currentWidth
     this.previousWidth = document.body.clientWidth
   }
 }
-
-export default Map 
