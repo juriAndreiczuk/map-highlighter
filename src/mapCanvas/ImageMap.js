@@ -3,8 +3,6 @@ export default class ImageMap {
     this.areas = document.querySelectorAll(`#${mapId} area`)
     this.previousWidth = 1920
     this.currentWidth = document.body.clientWidth / this.previousWidth
-    this.resize()
-    window.addEventListener('resize', () =>  this.resize)
   }
 
   get hrefs () {
@@ -28,7 +26,7 @@ export default class ImageMap {
   }
 
   resize () {
-    this.coords = this.currentWidth
+    this.coords = document.body.clientWidth / this.previousWidth
     this.previousWidth = document.body.clientWidth
   }
 }

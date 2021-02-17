@@ -1,8 +1,8 @@
 import Figure from './Figure'
 
 export default class Poly extends Figure {
-  constructor(x, y, coords, canvas, hoverColor) {
-    super(x, y, coords, canvas, hoverColor)
+  constructor(x, y, coords, canvas, hoverColors) {
+    super(x, y, coords, canvas, hoverColors)
   }
 
   drawFigure() {
@@ -13,7 +13,7 @@ export default class Poly extends Figure {
     }
     this.ctx.closePath()
     this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) 
-    ? this.hoverColor : 'transparent'
+    ? this.hoverColors[0] : this.hoverColors[1]
     this.ctx.fill()
   }
 } 

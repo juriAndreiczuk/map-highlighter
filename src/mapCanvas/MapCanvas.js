@@ -6,13 +6,11 @@ export default class MapCanvas {
   constructor(props) {
     this.canvas = document.querySelector(`#${props.canvasId}`)
     this.wrap = document.querySelector(props.wrap)
-    this.canvas.width = this.wrap.offsetWidth
-    this.canvas.height = this.wrap.offsetHeight
     this.ctx = this.canvas.getContext('2d')
     this.imgMap = new ImageMap(props.mapId)
     this.currentLink = location.href
-    this.hoverColor = props.hoverColor
-      
+    this.hoverColors = props.hoverColors
+
     this.canvas.onmouseleave = () =>
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
@@ -23,9 +21,11 @@ export default class MapCanvas {
       location.href = this.currentLink
   }
 
-  refreshCursor(e) {
+  refreshCanvasData(e) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     const rect = this.canvas.getBoundingClientRect()
+    this.canvas.width = this.wrap.offsetWidth
+    this.canvas.height = this.wrap.offsetHeight
 
     return {
       x: e.clientX - rect.left,
@@ -34,12 +34,13 @@ export default class MapCanvas {
   }
 
   mapHilight(e) {
-    const { x , y } = this.refreshCursor(e) 
-    
+    const { x , y } = this.refreshCanvasData(e) 
+    this.imgMap.resize()
+
     for(let i = 0; i < this.imgMap.coords.length; i++) {
       const figure = this.imgMap.areas[i].shape === 'rect' 
-      ? new Rect(x, y, this.imgMap.coordsSquare[i], this.canvas, this.hoverColor)
-      : new Poly(x, y, this.imgMap.coords[i], this.canvas, this.hoverColor)
+      ? new Rect(x, y, this.imgMap.coordsSquare[i], this.canvas, this.hoverColors)
+      : new Poly(x, y, this.imgMap.coords[i], this.canvas, this.hoverColors)
       if(this.ctx.isPointInPath(x, y)) 
         this.currentLink = this.imgMap.hrefs[i]
     }

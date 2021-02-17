@@ -139,17 +139,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var ImageMap = /*#__PURE__*/function () {
   function ImageMap(mapId) {
-    var _this = this;
-
     _classCallCheck(this, ImageMap);
 
     this.areas = document.querySelectorAll("#".concat(mapId, " area"));
     this.previousWidth = 1920;
     this.currentWidth = document.body.clientWidth / this.previousWidth;
-    this.resize();
-    window.addEventListener('resize', function () {
-      return _this.resize;
-    });
   }
 
   _createClass(ImageMap, [{
@@ -198,7 +192,7 @@ var ImageMap = /*#__PURE__*/function () {
   }, {
     key: "resize",
     value: function resize() {
-      this.coords = this.currentWidth;
+      this.coords = document.body.clientWidth / this.previousWidth;
       this.previousWidth = document.body.clientWidth;
     }
   }]);
@@ -217,7 +211,7 @@ exports.default = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Figure = function Figure(x, y, coords, canvas, hoverColor) {
+var Figure = function Figure(x, y, coords, canvas, hoverColors) {
   _classCallCheck(this, Figure);
 
   this.coords = coords;
@@ -225,7 +219,7 @@ var Figure = function Figure(x, y, coords, canvas, hoverColor) {
   this.y = y;
   this.canvas = canvas;
   this.ctx = this.canvas.getContext('2d');
-  this.hoverColor = hoverColor;
+  this.hoverColors = hoverColors;
   this.drawFigure();
 };
 
@@ -269,10 +263,10 @@ var Rect = /*#__PURE__*/function (_Figure) {
 
   var _super = _createSuper(Rect);
 
-  function Rect(x, y, coords, canvas, hoverColor) {
+  function Rect(x, y, coords, canvas, hoverColors) {
     _classCallCheck(this, Rect);
 
-    return _super.call(this, x, y, coords, canvas, hoverColor);
+    return _super.call(this, x, y, coords, canvas, hoverColors);
   }
 
   _createClass(Rect, [{
@@ -280,7 +274,7 @@ var Rect = /*#__PURE__*/function (_Figure) {
     value: function drawFigure() {
       this.ctx.beginPath(this.ctx.isPointInPath(this.x, this.y));
       this.ctx.rect(this.coords.x, this.coords.y, this.coords.w, this.coords.h);
-      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColor : 'transparent';
+      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColors[0] : this.hoverColors[1];
       this.ctx.fill();
     }
   }]);
@@ -328,10 +322,10 @@ var Poly = /*#__PURE__*/function (_Figure) {
 
   var _super = _createSuper(Poly);
 
-  function Poly(x, y, coords, canvas, hoverColor) {
+  function Poly(x, y, coords, canvas, hoverColors) {
     _classCallCheck(this, Poly);
 
-    return _super.call(this, x, y, coords, canvas, hoverColor);
+    return _super.call(this, x, y, coords, canvas, hoverColors);
   }
 
   _createClass(Poly, [{
@@ -345,7 +339,7 @@ var Poly = /*#__PURE__*/function (_Figure) {
       }
 
       this.ctx.closePath();
-      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColor : 'transparent';
+      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColors[0] : this.hoverColors[1];
       this.ctx.fill();
     }
   }]);
@@ -384,12 +378,10 @@ var MapCanvas = /*#__PURE__*/function () {
 
     this.canvas = document.querySelector("#".concat(props.canvasId));
     this.wrap = document.querySelector(props.wrap);
-    this.canvas.width = this.wrap.offsetWidth;
-    this.canvas.height = this.wrap.offsetHeight;
     this.ctx = this.canvas.getContext('2d');
     this.imgMap = new _ImageMap.default(props.mapId);
     this.currentLink = location.href;
-    this.hoverColor = props.hoverColor;
+    this.hoverColors = props.hoverColors;
 
     this.canvas.onmouseleave = function () {
       return _this.ctx.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
@@ -405,10 +397,12 @@ var MapCanvas = /*#__PURE__*/function () {
   }
 
   _createClass(MapCanvas, [{
-    key: "refreshCursor",
-    value: function refreshCursor(e) {
+    key: "refreshCanvasData",
+    value: function refreshCanvasData(e) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       var rect = this.canvas.getBoundingClientRect();
+      this.canvas.width = this.wrap.offsetWidth;
+      this.canvas.height = this.wrap.offsetHeight;
       return {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top
@@ -417,12 +411,14 @@ var MapCanvas = /*#__PURE__*/function () {
   }, {
     key: "mapHilight",
     value: function mapHilight(e) {
-      var _this$refreshCursor = this.refreshCursor(e),
-          x = _this$refreshCursor.x,
-          y = _this$refreshCursor.y;
+      var _this$refreshCanvasDa = this.refreshCanvasData(e),
+          x = _this$refreshCanvasDa.x,
+          y = _this$refreshCanvasDa.y;
+
+      this.imgMap.resize();
 
       for (var i = 0; i < this.imgMap.coords.length; i++) {
-        var figure = this.imgMap.areas[i].shape === 'rect' ? new _Rect.default(x, y, this.imgMap.coordsSquare[i], this.canvas, this.hoverColor) : new _Poly.default(x, y, this.imgMap.coords[i], this.canvas, this.hoverColor);
+        var figure = this.imgMap.areas[i].shape === 'rect' ? new _Rect.default(x, y, this.imgMap.coordsSquare[i], this.canvas, this.hoverColors) : new _Poly.default(x, y, this.imgMap.coords[i], this.canvas, this.hoverColors);
         if (this.ctx.isPointInPath(x, y)) this.currentLink = this.imgMap.hrefs[i];
       }
     }
@@ -443,7 +439,7 @@ var levelsImage = new _MapCanvas.default({
   wrap: '#wrap-canvas',
   canvasId: 'map-canvas',
   mapId: 'image-map',
-  hoverColor: 'rgba(0,0,0, .5)'
+  hoverColors: ['rgba(0,0,0, .8)', 'rgba(0,0,0, .5)']
 });
 },{"./mapCanvas/MapCanvas":"mapCanvas/MapCanvas.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -473,7 +469,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41771" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39325" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
