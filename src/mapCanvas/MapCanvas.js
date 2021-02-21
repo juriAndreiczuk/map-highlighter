@@ -43,13 +43,9 @@ export default class MapCanvas {
       const coords = currentType === 'rect' ? this.imgMap.coordsSquare[i] : this.imgMap.coords[i]
       const args = [x, y, coords, this.canvas, this.hoverColors]
 
-      if(currentType === 'rect') {
-        const figure = new Rect(...args)
-      } else if (currentType === 'poly') {
-        const figure = new Poly(...args)
-      } else if (currentType === 'circle') {
-        const figure = new Circle(...args)
-      }
+      const figure = currentType === 'rect' ?  new Rect(...args)
+      : currentType === 'poly' ? new Poly(...args) 
+      : new Circle(...args)
 
       if(this.ctx.isPointInPath(x, y))  {
         this.currentLink = this.imgMap.hrefs[i]

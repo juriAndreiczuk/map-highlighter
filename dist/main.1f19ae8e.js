@@ -502,14 +502,7 @@ var MapCanvas = /*#__PURE__*/function () {
         var currentType = this.imgMap.areas[i].shape;
         var coords = currentType === 'rect' ? this.imgMap.coordsSquare[i] : this.imgMap.coords[i];
         var args = [x, y, coords, this.canvas, this.hoverColors];
-
-        if (currentType === 'rect') {
-          var figure = _construct(_Rect.default, args);
-        } else if (currentType === 'poly') {
-          var _figure = _construct(_Poly.default, args);
-        } else if (currentType === 'circle') {
-          var _figure2 = _construct(_Circle.default, args);
-        }
+        var figure = currentType === 'rect' ? _construct(_Rect.default, args) : currentType === 'poly' ? _construct(_Poly.default, args) : _construct(_Circle.default, args);
 
         if (this.ctx.isPointInPath(x, y)) {
           this.currentLink = this.imgMap.hrefs[i];
@@ -563,7 +556,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38175" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42569" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
