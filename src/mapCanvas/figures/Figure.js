@@ -9,4 +9,8 @@ export default class Figure {
 
     this.drawFigure()
   }
+
+  drawFigure() {
+    throw new Error('drawFigure is requred function')
+  }
 }
