@@ -225,13 +225,21 @@ var Figure = /*#__PURE__*/function () {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext('2d');
     this.hoverColors = hoverColors;
-    this.drawFigure();
+    this.draw();
   }
 
   _createClass(Figure, [{
-    key: "drawFigure",
-    value: function drawFigure() {
-      throw new Error('drawFigure is requred function');
+    key: "draw",
+    value: function draw() {
+      this.ctx.beginPath(this.ctx.isPointInPath(this.x, this.y));
+      this.shape();
+      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColors[0] : this.hoverColors[1];
+      this.ctx.fill();
+    }
+  }, {
+    key: "shape",
+    value: function shape() {
+      throw new Error('Shape it\'s required function');
     }
   }]);
 
@@ -285,12 +293,9 @@ var Rect = /*#__PURE__*/function (_Figure) {
   }
 
   _createClass(Rect, [{
-    key: "drawFigure",
-    value: function drawFigure() {
-      this.ctx.beginPath(this.ctx.isPointInPath(this.x, this.y));
+    key: "shape",
+    value: function shape() {
       this.ctx.rect(this.coords.x, this.coords.y, this.coords.w, this.coords.h);
-      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColors[0] : this.hoverColors[1];
-      this.ctx.fill();
     }
   }]);
 
@@ -344,9 +349,8 @@ var Poly = /*#__PURE__*/function (_Figure) {
   }
 
   _createClass(Poly, [{
-    key: "drawFigure",
-    value: function drawFigure() {
-      this.ctx.beginPath(this.ctx.isPointInPath(this.x, this.y));
+    key: "shape",
+    value: function shape() {
       this.ctx.moveTo(this.coords[0], this.coords[1]);
 
       for (var j = 2; j < this.coords.length; j += 2) {
@@ -354,8 +358,6 @@ var Poly = /*#__PURE__*/function (_Figure) {
       }
 
       this.ctx.closePath();
-      this.ctx.fillStyle = this.ctx.isPointInPath(this.x, this.y) ? this.hoverColors[0] : this.hoverColors[1];
-      this.ctx.fill();
     }
   }]);
 
@@ -363,6 +365,62 @@ var Poly = /*#__PURE__*/function (_Figure) {
 }(_Figure2.default);
 
 exports.default = Poly;
+},{"./Figure":"mapCanvas/figures/Figure.js"}],"mapCanvas/figures/Circle.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Figure2 = _interopRequireDefault(require("./Figure"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Circle = /*#__PURE__*/function (_Figure) {
+  _inherits(Circle, _Figure);
+
+  var _super = _createSuper(Circle);
+
+  function Circle(x, y, coords, canvas, hoverColors) {
+    _classCallCheck(this, Circle);
+
+    return _super.call(this, x, y, coords, canvas, hoverColors);
+  }
+
+  _createClass(Circle, [{
+    key: "shape",
+    value: function shape() {
+      this.ctx.arc(this.coords[0], this.coords[1], this.coords[2], 0, 2 * Math.PI);
+    }
+  }]);
+
+  return Circle;
+}(_Figure2.default);
+
+exports.default = Circle;
 },{"./Figure":"mapCanvas/figures/Figure.js"}],"mapCanvas/MapCanvas.js":[function(require,module,exports) {
 "use strict";
 
@@ -377,7 +435,15 @@ var _Rect = _interopRequireDefault(require("./figures/Rect"));
 
 var _Poly = _interopRequireDefault(require("./figures/Poly"));
 
+var _Circle = _interopRequireDefault(require("./figures/Circle"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -433,8 +499,21 @@ var MapCanvas = /*#__PURE__*/function () {
       this.imgMap.resize();
 
       for (var i = 0; i < this.imgMap.coords.length; i++) {
-        var figure = this.imgMap.areas[i].shape === 'rect' ? new _Rect.default(x, y, this.imgMap.coordsSquare[i], this.canvas, this.hoverColors) : new _Poly.default(x, y, this.imgMap.coords[i], this.canvas, this.hoverColors);
-        if (this.ctx.isPointInPath(x, y)) this.currentLink = this.imgMap.hrefs[i];
+        var currentType = this.imgMap.areas[i].shape;
+        var coords = currentType === 'rect' ? this.imgMap.coordsSquare[i] : this.imgMap.coords[i];
+        var args = [x, y, coords, this.canvas, this.hoverColors];
+
+        if (currentType === 'rect') {
+          var figure = _construct(_Rect.default, args);
+        } else if (currentType === 'poly') {
+          var _figure = _construct(_Poly.default, args);
+        } else if (currentType === 'circle') {
+          var _figure2 = _construct(_Circle.default, args);
+        }
+
+        if (this.ctx.isPointInPath(x, y)) {
+          this.currentLink = this.imgMap.hrefs[i];
+        }
       }
     }
   }]);
@@ -443,7 +522,7 @@ var MapCanvas = /*#__PURE__*/function () {
 }();
 
 exports.default = MapCanvas;
-},{"./ImageMap":"mapCanvas/ImageMap.js","./figures/Rect":"mapCanvas/figures/Rect.js","./figures/Poly":"mapCanvas/figures/Poly.js"}],"main.js":[function(require,module,exports) {
+},{"./ImageMap":"mapCanvas/ImageMap.js","./figures/Rect":"mapCanvas/figures/Rect.js","./figures/Poly":"mapCanvas/figures/Poly.js","./figures/Circle":"mapCanvas/figures/Circle.js"}],"main.js":[function(require,module,exports) {
 "use strict";
 
 var _MapCanvas = _interopRequireDefault(require("./mapCanvas/MapCanvas"));
@@ -484,7 +563,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "34219" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38175" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

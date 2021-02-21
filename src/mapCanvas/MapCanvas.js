@@ -1,6 +1,7 @@
 import ImageMap from './ImageMap'
 import Rect from './figures/Rect'
 import Poly from './figures/Poly'
+import Circle from './figures/Circle'
 
 export default class MapCanvas {
   constructor(props) {
@@ -38,11 +39,21 @@ export default class MapCanvas {
     this.imgMap.resize()
 
     for(let i = 0; i < this.imgMap.coords.length; i++) {
-      const figure = this.imgMap.areas[i].shape === 'rect' 
-      ? new Rect(x, y, this.imgMap.coordsSquare[i], this.canvas, this.hoverColors)
-      : new Poly(x, y, this.imgMap.coords[i], this.canvas, this.hoverColors)
-      if(this.ctx.isPointInPath(x, y)) 
+      const currentType = this.imgMap.areas[i].shape
+      const coords = currentType === 'rect' ? this.imgMap.coordsSquare[i] : this.imgMap.coords[i]
+      const args = [x, y, coords, this.canvas, this.hoverColors]
+
+      if(currentType === 'rect') {
+        const figure = new Rect(...args)
+      } else if (currentType === 'poly') {
+        const figure = new Poly(...args)
+      } else if (currentType === 'circle') {
+        const figure = new Circle(...args)
+      }
+
+      if(this.ctx.isPointInPath(x, y))  {
         this.currentLink = this.imgMap.hrefs[i]
+      }
     }
   }
 }
