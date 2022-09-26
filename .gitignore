@@ -1,6 +1,8 @@
 .DS_Store
-node_modules
 npm-debug.log
 index.html
 /assets/
-.cahe
+.cache
+.idea
+node_modules
+dist
