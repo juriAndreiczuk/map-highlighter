@@ -6,18 +6,13 @@ export default class MapCanvas {
     this.canvas = document.querySelector(`#${props.canvasId}`)
     this.wrap = document.querySelector(props.wrap)
     this.ctx = this.canvas.getContext('2d')
-    this.imgMap = new ImageMap(props.mapId)
+    this.imgMap = new ImageMap(props.mapId, props.screenWidth)
     this.currentLink = location.href
     this.hoverColors = props.hoverColors
 
-    this.canvas.onmouseleave = () =>
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-
-    this.canvas.onmousemove = (e) =>
-      this.mapHilight(e)
-
-    this.canvas.onclick = () =>
-      location.href = this.currentLink
+    this.canvas.onmouseleave = () => this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.canvas.onmousemove = e => this.mapHilight(e)
+    this.canvas.onclick = () => location.href = this.currentLink
   }
 
   refreshCanvasData(e) {
@@ -35,16 +30,15 @@ export default class MapCanvas {
   mapHilight(e) {
     const { x , y } = this.refreshCanvasData(e) 
     this.imgMap.resize()
-
-    for(let i = 0; i < this.imgMap.coords.length; i++) {
+    this.imgMap.coords.forEach((_, i) => {
       const currentType = this.imgMap.areas[i].shape
-      const coords = currentType === 'rect' ? this.imgMap.coordsSquare[i] : this.imgMap.coords[i]
+      const coords = this.imgMap.coordsByType(currentType, i)
       const args = [x, y, coords, this.canvas, this.hoverColors]
 
       FiguresFactory.createFigure(currentType, args)
       if(this.ctx.isPointInPath(x, y))  {
         this.currentLink = this.imgMap.hrefs[i]
       }
-    }
+    })
   }
 }

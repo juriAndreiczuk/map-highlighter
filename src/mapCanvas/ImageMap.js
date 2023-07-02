@@ -1,7 +1,7 @@
 export default class ImageMap {
-  constructor(mapId) {
+  constructor(mapId, screenWidth) {
     this.areas = document.querySelectorAll(`#${mapId} area`)
-    this.previousWidth = 1440
+    this.previousWidth = screenWidth
     this.currentWidth = document.body.clientWidth / this.previousWidth
   }
 
@@ -20,9 +20,13 @@ export default class ImageMap {
   }
 
   set coords (val) {
-    for(const area of this.areas) {
+    this.areas.forEach(area => {
       area.coords = area.coords.split(',').map(item => item *= val).join(',')
-    }
+    })
+  }
+
+  coordsByType(val, i) {
+    return val === 'rect' ? this.coordsSquare[i] : this.coords[i]
   }
 
   resize () {
