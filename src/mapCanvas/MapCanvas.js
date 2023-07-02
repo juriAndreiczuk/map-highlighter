@@ -1,14 +1,14 @@
-import ImageMap from './ImageMap'
-import FiguresFactory from './figures/FiguresFactory'
+import MapImage from './MapImage'
+import FigureFactory from './figure/FigureFactory'
 
 export default class MapCanvas {
   constructor(props) {
     this.canvas = document.querySelector(`#${props.canvasId}`)
     this.wrap = document.querySelector(props.wrap)
     this.ctx = this.canvas.getContext('2d')
-    this.imgMap = new ImageMap(props.mapId, props.screenWidth)
-    this.currentLink = location.href
     this.hoverColors = props.hoverColors
+    this.currentLink = location.href
+    this.mapImg = new MapImage(props.mapId, props.screenWidth)
 
     this.canvas.onmouseleave = () => this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     this.canvas.onmousemove = e => this.mapHilight(e)
@@ -29,15 +29,15 @@ export default class MapCanvas {
 
   mapHilight(e) {
     const { x , y } = this.refreshCanvasData(e) 
-    this.imgMap.resize()
-    this.imgMap.coords.forEach((_, i) => {
-      const currentType = this.imgMap.areas[i].shape
-      const coords = this.imgMap.coordsByType(currentType, i)
+    this.mapImg.resize()
+    this.mapImg.coords.forEach((_, i) => {
+      const currentType = this.mapImg.areas[i].shape
+      const coords = this.mapImg.coordsByType(currentType, i)
       const args = [x, y, coords, this.canvas, this.hoverColors]
 
-      FiguresFactory.createFigure(currentType, args)
+      FigureFactory.createFigure(currentType, args)
       if(this.ctx.isPointInPath(x, y))  {
-        this.currentLink = this.imgMap.hrefs[i]
+        this.currentLink = this.mapImg.hrefs[i]
       }
     })
   }

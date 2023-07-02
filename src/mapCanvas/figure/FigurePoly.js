@@ -1,6 +1,6 @@
-import Figure from './Figure'
+import FigureBase from './FigureBase'
 
-export default class Poly extends Figure {
+export default class FigurePoly extends FigureBase {
   constructor(x, y, coords, canvas, hoverColors) {
     super(x, y, coords, canvas, hoverColors)
   }

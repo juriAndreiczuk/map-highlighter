@@ -1,4 +1,4 @@
-export default class Figure {
+export default class FigureBase {
   constructor(x, y, coords, canvas, hoverColors) {
     this.coords = coords
     this.x = x

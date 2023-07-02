@@ -1,16 +1,16 @@
-export default class ImageMap {
+export default class MapImage {
   constructor(mapId, screenWidth) {
-    this.areas = document.querySelectorAll(`#${mapId} area`)
+    this.areas = Array.from(document.querySelectorAll(`#${mapId} area`))
     this.previousWidth = screenWidth
     this.currentWidth = document.body.clientWidth / this.previousWidth
   }
 
   get hrefs () {
-    return Array.prototype.map.call(this.areas, item => item.href)
+    return this.areas.map(item => item.href)
   }
 
   get coords () {
-    return Array.prototype.map.call(this.areas, item => item.coords.split(','))
+    return this.areas.map(item => item.coords.split(','))
   }
 
   get coordsSquare () {
