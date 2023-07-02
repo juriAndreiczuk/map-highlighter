@@ -1,7 +1,7 @@
 export default class ImageMap {
   constructor(mapId) {
     this.areas = document.querySelectorAll(`#${mapId} area`)
-    this.previousWidth = 1920
+    this.previousWidth = 1440
     this.currentWidth = document.body.clientWidth / this.previousWidth
   }
 

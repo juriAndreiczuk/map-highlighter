@@ -1,7 +1,5 @@
 import ImageMap from './ImageMap'
-import Rect from './figures/Rect'
-import Poly from './figures/Poly'
-import Circle from './figures/Circle'
+import FiguresFactory from './figures/FiguresFactory'
 
 export default class MapCanvas {
   constructor(props) {
@@ -43,10 +41,7 @@ export default class MapCanvas {
       const coords = currentType === 'rect' ? this.imgMap.coordsSquare[i] : this.imgMap.coords[i]
       const args = [x, y, coords, this.canvas, this.hoverColors]
 
-      const figure = currentType === 'rect' ?  new Rect(...args)
-      : currentType === 'poly' ? new Poly(...args) 
-      : new Circle(...args)
-
+      FiguresFactory.createFigure(currentType, args)
       if(this.ctx.isPointInPath(x, y))  {
         this.currentLink = this.imgMap.hrefs[i]
       }
